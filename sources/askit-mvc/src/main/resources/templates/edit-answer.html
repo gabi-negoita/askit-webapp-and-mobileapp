@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit answer | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--TinyMCE-->
+    <script th:src="@{/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/tinymce/prism.js}"></script>
+    <link rel="stylesheet" th:href="@{/tinymce/prism.css}" type="text/css">
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/edit-answer.js}"></script>
+    <script th:src="@{/js/init-tinymce-writemode.js}"></script>
+    <script th:src="@{/js/init-dropdown.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Edit answer</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/questions}"><b>Questions</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{'/home/questions/' + ${answer.questionId}}"><b>View</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Edit Answer</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui blue top attached segment">
+                            <form id="edit-answer-form"
+                                  method="POST"
+                                  th:action="@{'/home/answers/save-changes/' + ${answer.id}}">
+                                <div class="ui doubling stackable grid">
+                                    <!--Body-->
+                                    <div class="sixteen wide middle aligned column">
+                                        <div class="ui form">
+                                            <div class="required field">
+                                                <label>Body</label>
+                                                <textarea class="mceEditor"
+                                                          id="body"
+                                                          name="body"
+                                                          th:text="${postAnswerModel.body}"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Submit-->
+                                    <div class="sixteen wide middle aligned column">
+                                        <button class="ui right floated blue button"
+                                                id="submit-button"
+                                                type="submit">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!--Answer comment-->
+                        <div class="ui bottom attached warning message"
+                             th:unless="${answer.comment == null}">
+                            <i class="exclamation circle yellow icon"></i>
+                            <span th:utext="'The reviewer commented: <b>' + ${answer.comment} + '</b'"></span>
+                        </div>
+                        <div class="ui bottom attached success message"
+                             th:if="${answer.comment == null}">
+                            No comments from the reviewer
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

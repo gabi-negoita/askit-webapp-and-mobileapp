@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit profile | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/edit-profile.js}"></script>
+    <script th:src="@{/js/init-accordion.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Edit profile</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section"
+                               th:href="@{'/home/profile/' + ${user.id}}"><b>Profile</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Edit</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--User info-->
+                    <div class="eight wide column">
+                        <table class="ui definition table">
+                            <tbody>
+                            <tr>
+                                <td class="collapsing right aligned">Username</td>
+                                <td th:text="${user.username}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Email</td>
+                                <td th:text="${user.email}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Date of birth</td>
+                                <td th:if="${user.dateOfBirth == null}">
+                                    <div class="ui info message">Not set</div>
+                                </td>
+                                <td th:text="${user.dateOfBirth.toLocalDate()}"
+                                    th:unless="${user.dateOfBirth == null}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Description</td>
+                                <td th:if="${user.description == null}">
+                                    <div class="ui info message">Not set</div>
+                                </td>
+                                <td th:text="${user.description}"
+                                    th:unless="${user.description == null}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Created date</td>
+                                <td th:text="${user.createdDate.toLocaleString()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--Edit-->
+                    <div class="eight wide column">
+                        <div class="ui styled fluid accordion">
+                            <!--Update profile info-->
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Update profile info
+                            </div>
+                            <div class="content">
+                                <form method="POST"
+                                      th:action="@{'/home/profile/edit/' + ${user.id} + '/change-account-info'}">
+                                    <div class="ui doubling stackable grid">
+                                        <!--Username-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="required field">
+                                                        <label>Username</label>
+                                                        <div class="ui left icon input">
+                                                            <input name="username"
+                                                                   th:value="${changeAccountInfoModel.username}"
+                                                                   type="text">
+                                                            <i class="user blue icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--DateOfBirth-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <label>Date of Birth</label>
+                                                        <div class="ui calendar">
+                                                            <div class="ui left icon input">
+                                                                <input name="dateOfBirth"
+                                                                       placeholder="Date Of Birth (yyyy-mm-dd)"
+                                                                       th:value="${changeAccountInfoModel.dateOfBirth}"
+                                                                       type="text">
+                                                                <i class="calendar alternate blue icon"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Description-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <label>Description</label>
+                                                        <textarea name="description"
+                                                                  placeholder="Write something about yourself..."
+                                                                  th:text="${changeAccountInfoModel.description}"></textarea>
+                                                    </div>
+                                                </div>
+                                                <!--                                        </div>-->
+                                            </div>
+                                        </div>
+                                        <!--Submit-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <button class="ui right floated blue button"
+                                                        type="submit">
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--Change account email-->
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Change account email
+                            </div>
+                            <div class="content">
+                                <form method="POST"
+                                      th:action="@{'/home/profile/edit/' + ${user.id} + '/change-account-email'}">
+                                    <div class="ui doubling stackable grid">
+                                        <!--Current Email-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <label>Current email</label>
+                                                        <div class="ui left icon input">
+                                                            <input name="currentEmail"
+                                                                   readonly
+                                                                   th:value="${changeAccountEmailModel.currentEmail}"
+                                                                   type="text">
+                                                            <i class="envelope blue icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--New Email-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="required field">
+                                                        <label>New email</label>
+                                                        <div class="ui left icon input">
+                                                            <input name="newEmail"
+                                                                   placeholder="e.g. example@email.com"
+                                                                   required
+                                                                   th:value="${changeAccountEmailModel.newEmail}"
+                                                                   type="text">
+                                                            <i class="envelope blue icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Submit-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <button class="ui right floated blue button"
+                                                        type="submit">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--Change account password-->
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Change account password
+                            </div>
+                            <div class="content">
+                                <form method="POST"
+                                      th:action="@{'/home/profile/edit/' + ${user.id} + '/change-account-password'}">
+                                    <div class="ui doubling stackable grid">
+                                        <!--Current Password-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="required field">
+                                                        <label>Current password</label>
+                                                        <div class="ui left icon input">
+                                                            <input name="currentPassword"
+                                                                   placeholder="Type your current password..."
+                                                                   required
+                                                                   type="password">
+                                                            <i class="lock blue icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--New Password-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="required field">
+                                                        <label>New password</label>
+                                                        <div class="ui left icon input">
+                                                            <input name="newPassword"
+                                                                   placeholder="Type your new password..."
+                                                                   required
+                                                                   type="password">
+                                                            <i class="lock blue icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Confirm New Password-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="required field">
+                                                        <label>Confirm new password</label>
+                                                        <div class="ui left icon input">
+                                                            <input name="confirmNewPassword"
+                                                                   placeholder="Retype your current password..."
+                                                                   required
+                                                                   type="password">
+                                                            <i class="lock blue icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Submit-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <button class="ui right floated blue button"
+                                                        type="submit">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="ui basic mini modal" id="logout-modal" th:fragment="logout-confirmation">
+    <div class="ui icon header">
+        <i class="sign out alternate icon"></i>
+        Log Out
+    </div>
+    <div class="content">
+        <div class="ui center aligned container">
+            Are you sure you want to log out?
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui center aligned container">
+            <!--No-->
+            <div class="ui red cancel inverted button">
+                No
+            </div>
+            <!--Yes-->
+            <a th:href="@{/logout}">
+                <div class="ui green ok inverted button">
+                    Yes
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

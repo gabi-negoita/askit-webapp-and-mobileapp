@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View notification | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/view-category.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>View notification</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{'/home/profile/' + ${session.user.id}}"><b>Profile</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{'/home/profile/notifications/' + ${session.user.id}}"><b>Notifications</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">View</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui top attached segment">
+                            <div class="ui header"
+                                 th:text="${notification.title}">
+                            </div>
+                        </div>
+                        <div class="ui attached segment"
+                             th:text="${notification.content}">
+                        </div>
+                        <div class="ui bottom attached borderless stackable menu">
+                            <div class="right floated menu">
+                                <div class="grey header item"
+                                     th:text="${notification.createdDate.toLocaleString()}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>fa2df0b1-0ead-4c5e-8252-abe4763579ff.SCHEMA:cti</OriginalElement>
+  <nodes>
+    <node x="404.42757971218964" y="259.46726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question_attachment</node>
+    <node x="141.62689898419853" y="362.46726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question_vote</node>
+    <node x="806.5485327313771" y="448.46726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.role</node>
+    <node x="685.2282604401807" y="593.4672686230249">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.notification</node>
+    <node x="130.12689898419853" y="109.46726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question</node>
+    <node x="126.12689898419853" y="675.6241534988712">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer</node>
+    <node x="361.2674435665914" y="382.46726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user</node>
+    <node x="610.9079881489843" y="448.96726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user_role</node>
+    <node x="548.497852003386" y="135.96726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.category</node>
+    <node x="685.2282604401807" y="237.46726862302484">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.event_log</node>
+    <node x="141.62689898419853" y="498.04571106094807">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer_vote</node>
+    <node x="409.9275797121897" y="615.4672686230249">fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer_attachment</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.notification" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user" relationship="REFERENCES">
+      <point x="0.0" y="-94.5" />
+      <point x="763.2282604401807" y="565.079006772009" />
+      <point x="499.8126156884876" y="565.079006772009" />
+      <point x="499.8126156884876" y="593.4672686230249" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user_role" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.role" relationship="REFERENCES">
+      <point x="27.25" y="-39.0" />
+      <point x="692.6579881489843" y="487.9672686230249" />
+      <point x="869.5485327313771" y="487.9672686230249" />
+      <point x="0.0" y="39.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer_attachment" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer" relationship="REFERENCES">
+      <point x="0.0" y="-50.5" />
+      <point x="491.4275797121897" y="823.7731376975169" />
+      <point x="212.65329430022564" y="823.7731376975169" />
+      <point x="212.65329430022564" y="864.6241534988712" />
+      <point x="0.0" y="94.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question" relationship="REFERENCES">
+      <point x="-39.0" y="-94.5" />
+      <point x="165.12689898419853" y="770.1241534988712" />
+      <point x="95.38759593679444" y="770.1241534988712" />
+      <point x="95.38759593679444" y="214.96726862302484" />
+      <point x="196.62689898419853" y="214.96726862302484" />
+      <point x="196.62689898419853" y="320.46726862302484" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer_vote" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user" relationship="REFERENCES">
+      <point x="31.25" y="-61.5" />
+      <point x="235.37689898419853" y="505.8002257336343" />
+      <point x="442.7674435665914" y="505.8002257336343" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user" relationship="REFERENCES">
+      <point x="39.0" y="-94.5" />
+      <point x="243.12689898419853" y="823.7731376975169" />
+      <point x="271.7020062076749" y="823.7731376975169" />
+      <point x="271.7020062076749" y="770.1241534988712" />
+      <point x="317.94717127539496" y="770.1241534988712" />
+      <point x="317.94717127539496" y="559.5457110609481" />
+      <point x="442.7674435665914" y="559.5457110609481" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question_vote" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user" relationship="REFERENCES">
+      <point x="33.250000000000014" y="-61.5" />
+      <point x="241.37689898419853" y="472.96726862302484" />
+      <point x="442.7674435665914" y="472.96726862302484" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer_vote" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.answer" relationship="REFERENCES">
+      <point x="-31.25" y="-61.5" />
+      <point x="172.87689898419853" y="572.0" />
+      <point x="204.12689898419853" y="572.0" />
+      <point x="0.0" y="94.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user" relationship="REFERENCES">
+      <point x="39.0" y="-105.5" />
+      <point x="247.12689898419853" y="257.77313769751686" />
+      <point x="317.94717127539496" y="257.77313769751686" />
+      <point x="317.94717127539496" y="428.96726862302484" />
+      <point x="442.7674435665914" y="428.96726862302484" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user_role" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user" relationship="REFERENCES">
+      <point x="-27.25" y="-39.0" />
+      <point x="638.1579881489843" y="487.96726862302484" />
+      <point x="442.7674435665914" y="487.96726862302484" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question_vote" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question" relationship="REFERENCES">
+      <point x="-33.25" y="-61.5" />
+      <point x="208.12689898419853" y="362.46726862302484" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.category" relationship="REFERENCES">
+      <point x="-39.0" y="-105.5" />
+      <point x="218.6884978132053" y="109.46726862302484" />
+      <point x="218.6884978132053" y="175.46726862302484" />
+      <point x="577.6326477849886" y="175.46726862302484" />
+      <point x="577.6326477849886" y="214.96726862302484" />
+      <point x="0.0" y="39.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.event_log" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.user" relationship="REFERENCES">
+      <point x="0.0" y="-72.5" />
+      <point x="763.2282604401807" y="420.32900677200905" />
+      <point x="442.7674435665914" y="420.32900677200905" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question_attachment" target="fa2df0b1-0ead-4c5e-8252-abe4763579ff.TABLE:cti.question" relationship="REFERENCES">
+      <point x="0.0" y="-50.5" />
+      <point x="491.42757971218964" y="214.96726862302484" />
+      <point x="221.62689898419853" y="214.96726862302484" />
+      <point x="221.62689898419853" y="257.77313769751686" />
+      <point x="208.12689898419853" y="257.77313769751686" />
+      <point x="0.0" y="105.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="493.5" y="487.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

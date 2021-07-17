@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+</head>
+<body>
+<div class="ui masthead vertical segment">
+    <div class="ui container">
+        <div class="introduction">
+            <h1 class="ui header">
+                Error
+            </h1>
+        </div>
+    </div>
+</div>
+<!--Page Content-->
+<div class="ui vertical basic very padded segment">
+    <div class="ui center aligned container">
+        <div class="ui doubling stackable grid">
+            <div class="row">
+                <div class="sixteen wide column">
+                    <div class="ui top attached red segment">
+                        <div class="header">
+                            <i class="huge frown red icon"></i>
+                        </div>
+                        <div class="ui tiny red statistic">
+                            <div class="label">Code</div>
+                            <div class="value" th:text="${errorModel.code}"></div>
+                        </div>
+                        <div class="ui list">
+                            <div class="item">
+                                <div class="content" th:each="instance : ${errorModel.details}">
+                                    <div class="header" th:text="${instance}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui bottom attached borderless menu">
+                        <a class="header item" th:href="@{/home}">
+                            <i class="home blue icon"></i>
+                            Home
+                        </a>
+                        <div class="right floated menu">
+                            <a class="header item"
+                               href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes"
+                               target="_blank">
+                                <i class="info circle yellow icon"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

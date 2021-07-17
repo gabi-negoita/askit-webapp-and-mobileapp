@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage category | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/view-category.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Manage category</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/categories}"><b>Categories</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Manage</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="eight wide column">
+                        <div th:class="'ui blue segment ' + ${!isSafeToDelete ? 'top attached' : ''}">
+                            <div class="ui doubling stackable grid">
+                                <div class="row">
+                                    <!--Category title-->
+                                    <div class="sixteen wide column">
+                                        <form id="save-changes-form" method="POST"
+                                              th:action="@{'/home/categories/manage-category/save-changes/' + ${categoryModel.id}}">
+                                            <div class="ui form">
+                                                <div class="required field">
+                                                    <label>Title</label>
+                                                    <div class="ui input">
+                                                        <input id="title"
+                                                               name="title"
+                                                               required
+                                                               th:value="${categoryModel.title}"
+                                                               type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="column">
+                                        <!--Save changes-->
+                                        <div class="ui right floated blue disabled button" id="save-changes">
+                                            Save
+                                        </div>
+                                        <!--Save changes confirmation-->
+                                        <div class="ui basic mini modal" id="edit-category-modal">
+                                            <div class="ui icon header">
+                                                <i class="save blue icon"></i>
+                                                Save changes
+                                            </div>
+                                            <div class="content">
+                                                <div class="ui center aligned container">
+                                                    Are you sure you want to continue?
+                                                </div>
+                                            </div>
+                                            <div class="actions">
+                                                <div class="ui center aligned container">
+                                                    <!--No-->
+                                                    <div class="ui red cancel inverted button">
+                                                        No
+                                                    </div>
+                                                    <!--Yes-->
+                                                    <button class="ui green ok inverted button" form="save-changes-form" type="submit">
+                                                        Yes
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Delete-->
+                                        <div id="delete"
+                                             th:class="'ui right floated red button ' + ${!isSafeToDelete ? 'disabled' : ''}">
+                                            Delete
+                                        </div>
+                                        <!--Delete confirmation-->
+                                        <div class="ui basic mini modal"
+                                             id="delete-category-modal"
+                                             th:if="${isSafeToDelete}">
+                                            <div class="ui icon header">
+                                                <i class="trash alternate red icon"></i>
+                                                Delete category
+                                            </div>
+                                            <div class="content">
+                                                <div class="ui center aligned container">
+                                                    Are you sure you want to continue?
+                                                </div>
+                                            </div>
+                                            <div class="actions">
+                                                <form method="POST"
+                                                      th:action="@{'/home/categories/manage-category/delete/' + ${categoryModel.id}}">
+                                                    <div class="ui center aligned container">
+                                                        <!--No-->
+                                                        <div class="ui red cancel inverted button">
+                                                            No
+                                                        </div>
+                                                        <!--Yes-->
+                                                        <button class="ui green ok inverted button"
+                                                                type="submit">
+                                                            Yes
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui bottom attached warning message"
+                             th:if="${!isSafeToDelete}">
+                            <i class="circular info icon"></i>
+                            This category can not be deleted because it has items attached to it
+                        </div>
+                    </div>
+                    <div class="eight wide column">
+                        <div class="ui top attached segment">
+                            <div class="ui header">Statistics</div>
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <div class="ui center aligned doubling stackable equal width grid">
+                                <div class="row">
+                                    <!--Answered questions-->
+                                    <div class="column">
+                                        <div class="ui green statistic">
+                                            <div class="value" th:text="${categoryStatistics.answeredQuestions}"></div>
+                                            <div class="label">Answered questions</div>
+                                        </div>
+                                    </div>
+                                    <!--Unanswered questions-->
+                                    <div class="column">
+                                        <div class="ui red statistic">
+                                            <div class="value" th:text="${categoryStatistics.unansweredQuestions}"></div>
+                                            <div class="label">Unanswered questions</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

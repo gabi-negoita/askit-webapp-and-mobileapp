@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div id="message"
+     th:class="'ui ' + ${messageModel.type.key} + ' message'"
+     th:fragment="message">
+    <i class="close icon"></i>
+    <div class="header" th:text="${messageModel.message}"></div>
+    <div class="ui list" th:unless="${messageModel.details == null}">
+        <div class="item"
+             th:each="instance : ${messageModel.details}">
+            <div th:class="'ui ' + ${messageModel.type.value} + ' label'" th:text="${instance.key}"
+                 th:unless="${instance.key == null}"></div>
+            <span th:text="${instance.value}"></span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

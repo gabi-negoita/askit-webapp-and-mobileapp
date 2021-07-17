@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Review answers | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/init-dropdown.js}"></script>
+    <script th:src="@{/js/init-accordion.js}"></script>
+    <script th:src="@{/js/review-answer.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span th:text="'Review answers (' + ${answerWrapper.totalItems} + ')'"></span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/reviews}"><b>Reviews</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Answers</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <!--Filters-->
+                        <div class="ui styled fluid accordion">
+                            <div class="title">
+                                <i class="filter blue icon"></i>
+                                Filter results
+                            </div>
+                            <div class="content">
+                                <form method="GET" th:action="@{/home/reviews/answers}">
+                                    <div class="ui doubling stackable grid">
+                                        <div class="row">
+                                            <!--Sort by-->
+                                            <div class="four wide column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <label>Sort by</label>
+                                                        <div class="ui selection fluid dropdown">
+                                                            <i class="sort amount up blue icon"></i>
+                                                            <input name="sort" th:value="${sort}" type="hidden">
+                                                            <div class="default text">Sort by</div>
+                                                            <div class="ui menu">
+                                                                <div class="item" data-value="newest">Newest</div>
+                                                                <div class="item" data-value="oldest">Oldest</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <!--Size-->
+                                            <div class="eight wide middle aligned column">
+                                                <div class="header">
+                                                    <div class="content">
+                                                        <i class="list ul blue icon"></i>
+                                                        Show
+                                                        <div class="ui inline dropdown">
+                                                            <input name="size" th:value="${size}" type="hidden">
+                                                            <div class="text">10</div>
+                                                            <i class="dropdown icon"></i>
+                                                            <div class="menu">
+                                                                <div class="item">10</div>
+                                                                <div class="item">25</div>
+                                                                <div class="item">50</div>
+                                                                <div class="item">100</div>
+                                                            </div>
+                                                        </div>
+                                                        items/page
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--Apply filters-->
+                                            <div class="eight wide column">
+                                                <div class="ui right floated blue button"
+                                                     id="submit">
+                                                    Apply
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" th:if="${answerWrapper.totalItems == 0}">
+                    <div class="sixteen wide column">
+                        <div class="ui info message">
+                            <div class="header">
+                                Nothing to review
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" th:unless="${answerWrapper.totalItems == 0}">
+                    <div class="sixteen wide column">
+                        <!--Answer table-->
+                        <table class="ui striped selectable table">
+                            <thead class="full-width">
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Question ID</th>
+                                <th>Date</th>
+                                <th>Link</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="instance : ${answerWrapper.content}">
+                                <tr>
+                                    <td class="collapsing" th:text="${instance.id}"></td>
+                                    <td>
+                                        <i class="linkify disabled blue icon"></i>
+                                        <a target="_blank"
+                                           th:href="@{'/home/profile/' + ${instance.userId}}"
+                                           th:utext="'<b>' + ${userMap.get(instance.userId).username} + '</b>'"></a>
+                                    </td>
+                                    <td>
+                                        <i class="linkify disabled blue icon"></i>
+                                        <a target="_blank"
+                                           th:href="@{'/home/questions/' + ${instance.questionId}}"
+                                           th:utext="'<b>' + ${instance.questionId} + '</b>'"></a>
+                                    </td>
+                                    <td class="collapsing" th:text="${instance.createdDate.toLocaleString()}"></td>
+                                    <td class="collapsing">
+                                        <i class="linkify disabled blue icon"></i>
+                                        <a target="_blank"
+                                           th:href="@{'/home/reviews/answers/'+ ${instance.id}}"><b>Review</b></a>
+                                    </td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                            <tfoot class="full-width">
+                            <tr>
+                                <th colspan="6">
+                                    <!--Pagination-->
+                                    <div class="ui nine item pagination borderless menu">
+                                        <!--First Page-->
+                                        <a th:class="'ui item page btn' + ${answerWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', 1).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="double angle left icon"></i>
+                                        </a>
+                                        <!--Previous Page-->
+                                        <a th:class="'ui item page btn' + ${answerWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', answerWrapper.currentPage).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="angle left icon"></i>
+                                        </a>
+                                        <!--Numbered Pages-->
+                                        <th:block th:each="instance : ${answerPagination}">
+                                            <a th:class="'ui item' + ${instance == answerWrapper.currentPage  ? ' active' : ''} + ' page btn'"
+                                               th:href="${urlBuilder.replaceQueryParam('page', instance + 1).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <span th:text="${instance + 1}"></span>
+                                            </a>
+                                        </th:block>
+                                        <!--Next Page-->
+                                        <a th:class="'ui item page btn' + ${answerWrapper.currentPage + 1 < answerWrapper.totalPages ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', answerWrapper.currentPage + 2).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="angle right icon"></i>
+                                        </a>
+                                        <!--Last Page-->
+                                        <a th:class="'ui item page btn' + ${answerWrapper.currentPage + 1 < answerWrapper.totalPages ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', answerWrapper.totalPages).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="double angle right icon"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

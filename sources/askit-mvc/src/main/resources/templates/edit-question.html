@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit question | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--TinyMCE-->
+    <script th:src="@{/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/tinymce/prism.js}"></script>
+    <link rel="stylesheet" th:href="@{/tinymce/prism.css}" type="text/css">
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/edit-question.js}"></script>
+    <script th:src="@{/js/init-tinymce-writemode.js}"></script>
+    <script th:src="@{/js/init-dropdown.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Edit question</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/questions}"><b>Questions</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Edit</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui top attached blue segment">
+                            <form id="edit-question-form"
+                                  method="POST"
+                                  th:action="@{'/home/questions/save-changes/' + ${question.id}}">
+                                <div class="ui doubling stackable grid">
+                                    <div class="row">
+                                        <!--Title-->
+                                        <div class="twelve wide middle aligned column">
+                                            <div class="ui form">
+                                                <div class="required field">
+                                                    <label>Title</label>
+                                                    <div class="ui fluid input">
+                                                        <input id="subject"
+                                                               maxlength="256"
+                                                               name="subject"
+                                                               placeholder="Give your question a brief description"
+                                                               required
+                                                               th:value="${postQuestionModel.subject}"
+                                                               type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Category-->
+                                        <div class="four wide middle aligned column">
+                                            <div class="ui form required">
+                                                <div class="required field">
+                                                    <label>Category</label>
+                                                    <div class="ui fluid selection dropdown">
+                                                        <i class="th teal icon"></i>
+                                                        <input id="category"
+                                                               name="category"
+                                                               th:value="${postQuestionModel.category.toLowerCase()}"
+                                                               type="hidden">
+                                                        <div class="default text">Select Category</div>
+                                                        <div class="ui menu">
+                                                            <th:block th:each="instance : ${categories}">
+                                                                <!--Category-->
+                                                                <div class="item">
+                                                                    <th:block th:text="${instance.title}"></th:block>
+                                                                </div>
+                                                            </th:block>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Body-->
+                                    <div class="sixteen wide middle aligned column">
+                                        <div class="ui form">
+                                            <div class="required field">
+                                                <label>Body</label>
+                                                <textarea class="mceEditor"
+                                                          id="body"
+                                                          name="body"
+                                                          th:text="${postQuestionModel.body}"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Submit-->
+                                    <div class="sixteen wide middle aligned column">
+                                        <button class="ui right floated blue button"
+                                                id="submit-button"
+                                                type="submit">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!--Question comment-->
+                        <div class="ui bottom attached warning message"
+                             th:unless="${question.comment == null}">
+                            <i class="exclamation circle yellow icon"></i>
+                            <span th:utext="'The reviewer commented: <b>' + ${question.comment} + '</b'"></span>
+                        </div>
+                        <div class="ui bottom attached success message"
+                             th:if="${question.comment == null}">
+                            No comments from the reviewer
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

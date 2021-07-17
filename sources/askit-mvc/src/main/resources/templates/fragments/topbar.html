@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--Top Bar-->
+<div class="ui top fixed borderless inverted blue menu" th:fragment="topbar">
+    <a class="header item" id="sidebar">
+        <i class="bars icon"></i>
+        Menu
+    </a>
+    <div class="right menu">
+        <th:block th:if="${session.user} == null">
+            <a class="header item" th:href="@{/login}">Login</a>
+            <a class="header item" th:href="@{/register}">Register</a>
+        </th:block>
+        <th:block th:unless="${session.user} == null">
+            <!--Notifications-->
+            <a class="notification item">
+                <i class="bell outline icon" id="notification-icon"></i>
+            </a>
+            <div class="ui wide popup">
+                <div class="ui grid">
+                    <div class="row">
+                        <div class="sixteen wide column">
+                            <div class="ui inverted blue stackable menu">
+                                <div class="header item">Notifications</div>
+                                <div class="right floated menu">
+                                    <a class="item" id="mark-all-as-read">
+                                        Mark all as read
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="sixteen wide column">
+                            <div class="ui middle aligned relaxed selection list" id="notifications-body"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="sixteen wide column">
+                            <a class="ui fluid blue basic button"
+                               th:href="@{'/home/profile/notifications/' + ${session.user.id}}">
+                                More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Username-->
+            <a class="active header item"
+               th:href="@{'/home/profile/' + ${session.user.id}}"
+               th:text="${session.user.username}">
+            </a>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Categories | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/categories.js}"></script>
+    <script th:src="@{/js/init-accordion.js}"></script>
+    <script th:src="@{/js/init-dropdown.js}"></script>
+    <script th:src="@{/js/init-checkbox.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+    <!--Google Charts-->
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span th:text="'Categories (' + ${categoryWrapper.totalItems} + ')'"></span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Categories</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <!--Most used categories-->
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui top attached segment">
+                            <div class="ui grid">
+                                <div class="row">
+                                    <div class="eight wide column">
+                                        <div class="ui header">Most used categories</div>
+                                    </div>
+                                    <div class="eight wide right aligned column">
+                                        <i class="linkify disabled blue icon"></i>
+                                        <a th:href="@{/home/categories/create}">
+                                            <b>Create category</b>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <div id="most-used-categories-chart"></div>
+                            <div class="ui form">
+                                <div class="four wide field">
+                                    <label>Date</label>
+                                    <div class="ui calendar" id="month-year-calendar">
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            <input id="date-input" placeholder="Date (yyyy-mm)" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="inline field">
+                                    <div class="ui toggle checkbox">
+                                        <input class="hidden"
+                                               id="all-time"
+                                               name="broadcast"
+                                               type="checkbox">
+                                        <label>All time</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui hidden section divider"></div>
+                <!--Filters-->
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui styled fluid accordion">
+                            <div class="title">
+                                <i class="filter blue icon"></i>
+                                Filter results
+                            </div>
+                            <div class="content">
+                                <form method="GET" th:action="@{/home/categories}">
+                                    <div class="ui doubling stackable grid">
+                                        <!--Search-->
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <label>Search</label>
+                                                        <div class="ui fluid icon input">
+                                                            <i class="search blue icon"></i>
+                                                            <input name="search" placeholder="Search by title..." th:value="${search}"
+                                                                   type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Sort by-->
+                                        <div class="row">
+                                            <div class="four wide column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <label>Sort by</label>
+                                                        <div class="ui selection fluid dropdown">
+                                                            <i class="sort amount up blue icon"></i>
+                                                            <input name="sortBy" th:value="${sortBy}" type="hidden">
+                                                            <div class="default text">Sort by</div>
+                                                            <div class="ui menu">
+                                                                <div class="item" data-value="titleatoz">Title A to Z</div>
+                                                                <div class="item" data-value="titleztoa">Title Z to A</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <!--Size-->
+                                            <div class="eight wide middle aligned column">
+                                                <div class="header">
+                                                    <div class="content">
+                                                        <i class="list ul blue icon"></i>
+                                                        Show
+                                                        <div class="ui inline dropdown">
+                                                            <input name="size" th:value="${size}" type="hidden">
+                                                            <div class="text">10</div>
+                                                            <i class="dropdown icon"></i>
+                                                            <div class="menu">
+                                                                <div class="item">10</div>
+                                                                <div class="item">25</div>
+                                                                <div class="item">50</div>
+                                                                <div class="item">100</div>
+                                                            </div>
+                                                        </div>
+                                                        items/page
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--Apply filters-->
+                                            <div class="eight wide column">
+                                                <button class="ui right floated blue button"
+                                                     type="submit">
+                                                    Apply
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--No results-->
+                <div class="row" th:if="${categoryWrapper.totalItems} == 0">
+                    <div class="sixteen wide column">
+                        <div class="ui info message">
+                            <div class="header">
+                                No results found
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Categories table-->
+                <div class="row" th:unless="${categoryWrapper.totalItems == 0}">
+                    <div class="sixteen wide column">
+                        <table class="ui striped selectable table" id="category-table">
+                            <thead class="full-width">
+                            <tr>
+                                <th>Title</th>
+                                <th>Link</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="instance : ${categoryWrapper.content}">
+                                <tr>
+                                    <td th:text="${instance.title}"></td>
+                                    <td class="collapsing">
+                                        <i class="linkify disabled blue icon"></i>
+                                        <a target="_blank"
+                                           th:href="@{'/home/categories/manage-category/'+ ${instance.id}}"><b>Manage</b></a>
+                                    </td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                            <tfoot class="full-width">
+                            <tr>
+                                <th colspan="6">
+                                    <!--Pagination-->
+                                    <div class="ui nine item pagination borderless menu">
+                                        <!--First Page-->
+                                        <a th:class="'ui item page btn' + ${categoryWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', 1).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="double angle left icon"></i>
+                                        </a>
+                                        <!--Previous Page-->
+                                        <a th:class="'ui item page btn' + ${categoryWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', categoryWrapper.currentPage).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="angle left icon"></i>
+                                        </a>
+                                        <!--Numbered Pages-->
+                                        <th:block th:each="instance : ${pagination}">
+                                            <a th:class="'ui item' + ${instance == categoryWrapper.currentPage  ? ' active' : ''} + ' page btn'"
+                                               th:href="${urlBuilder.replaceQueryParam('page', instance + 1).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <span th:text="${instance + 1}"></span>
+                                            </a>
+                                        </th:block>
+                                        <!--Next Page-->
+                                        <a th:class="'ui item page btn' + ${categoryWrapper.currentPage + 1 < categoryWrapper.totalPages ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', categoryWrapper.currentPage + 2).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="angle right icon"></i>
+                                        </a>
+                                        <!--Last Page-->
+                                        <a th:class="'ui item page btn' + ${categoryWrapper.currentPage + 1 < categoryWrapper.totalPages ? '' : ' disabled'}"
+                                           th:href="${urlBuilder.replaceQueryParam('page', categoryWrapper.totalPages).toUriString()}"
+                                           th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                            <i class="double angle right icon"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

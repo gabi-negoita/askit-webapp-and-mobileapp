@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage User | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/init-accordion.js}"></script>
+    <script th:src="@{/js/init-dropdown.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Manage user</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/users}"><b>Users</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Manage</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--User info-->
+                    <div class="eight wide column">
+                        <table class="ui definition table">
+                            <tbody>
+                            <tr>
+                                <td class="collapsing right aligned">ID</td>
+                                <td th:text="${user.id}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Username</td>
+                                <td th:text="${user.username}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Email</td>
+                                <td th:text="${user.email}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Created date</td>
+                                <td th:text="${user.createdDate.toLocaleString()}"></td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Account status</td>
+                                <td>
+                                    <div class="ui red label" th:if="${user.status == -1}" th:text="BLOCKED"></div>
+                                    <div class="ui grey label" th:if="${user.status == 0}"
+                                         th:text="'NOT ACTIVATED'"></div>
+                                    <div class="ui green label" th:if="${user.status == 1}" th:text="ACTIVE"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="right aligned">Roles</td>
+                                <td>
+                                    <div class="ui basic label"
+                                         th:if="${user.roles.size() == 0}"
+                                         th:text="'No roles'"></div>
+                                    <th:block th:each="role : ${user.roles}">
+                                        <div class="ui brown label"
+                                             th:if="${role.name.equals('teacher')}"
+                                             th:text="${role.name.toUpperCase()}"></div>
+                                        <div class="ui teal label"
+                                             th:if="${role.name.equals('reviewer')}"
+                                             th:text="${role.name.toUpperCase()}"></div>
+                                        <div class="ui purple label"
+                                             th:if="${role.name.equals('moderator')}"
+                                             th:text="${role.name.toUpperCase()}"></div>
+                                        <div class="ui blue label"
+                                             th:if="${role.name.equals('administrator')}"
+                                             th:text="${role.name.toUpperCase()}"></div>
+                                    </th:block>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="collapsing right aligned">Profile page</td>
+                                <td><a target="_blank"
+                                       th:href="@{'/home/profile/' + ${user.id}}"
+                                       th:text="${'/home/profile/' + user.id}"></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--Change data-->
+                    <div class="eight wide column">
+                        <div class="ui styled fluid accordion">
+                            <!--Change account status-->
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Change account status
+                            </div>
+                            <div class="content">
+                                <form method="POST"
+                                      th:action="@{'/home/users/manage-user/change-status/' + ${user.id}}">
+                                    <div class="ui doubling stackable grid">
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="required field">
+                                                        <label>Status</label>
+                                                        <div class="ui selection fluid dropdown">
+                                                            <input name="status" th:value="${changeAccountStatusModel.status == null ? 0 : changeAccountStatusModel.status}" type="hidden">
+                                                            <i class="dropdown icon"></i>
+                                                            <div class="default text">Select status</div>
+                                                            <div class="ui menu">
+                                                                <div class="item" data-value="1">ACTIVE</div>
+                                                                <div class="item" data-value="0">NOT ACTIVATED</div>
+                                                                <div class="item" data-value="-1">BLOCKED</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <button class="ui right floated blue button" type="submit">
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--Change roles-->
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Change account roles
+                            </div>
+                            <div class="content">
+                                <form method="POST"
+                                      th:action="@{'/home/users/manage-user/change-roles/'+ ${user.id}}">
+                                    <div class="ui doubling stackable grid">
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <div class="ui form">
+                                                    <div class="field">
+                                                        <label>Roles</label>
+                                                        <select class="ui fluid dropdown" multiple name="roles">
+                                                            <option value="">Select roles</option>
+                                                            <th:block th:each="instance : ${roleWrapper.content}">
+                                                                <!--Unselected option-->
+                                                                <option selected
+                                                                        th:text="${instance.name.toUpperCase()}"
+                                                                        th:unless="${userRoleMap.get(instance.id) == null}"
+                                                                        th:value="${instance.id}"></option>
+                                                                <!--Selected option-->
+                                                                <option th:if="${userRoleMap.get(instance.id) == null}"
+                                                                        th:text="${instance.name.toUpperCase()}"
+                                                                        th:value="${instance.id}"></option>
+                                                            </th:block>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="sixteen wide column">
+                                                <button class="ui right floated blue button" type="submit">
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</body>
+</html>

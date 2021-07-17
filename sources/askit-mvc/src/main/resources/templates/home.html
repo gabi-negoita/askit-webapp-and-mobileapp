@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/home.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/home.css}" type="text/css">
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui very relaxed centered stackable doubling grid">
+                <!--Welcome-->
+                <div class="row">
+                    <div class="six wide column">
+                        <h1 class="ui center aligned header" id="welcome-header">
+                            WELCOME
+                            <div class="sub header">TO OUR COMMUNITY</div>
+                        </h1>
+                    </div>
+                </div>
+                <div class="ui hidden section divider"></div>
+                <!--Search bar-->
+                <div class="row">
+                    <div class="twelve wide column">
+                        <form method="GET" th:action="@{/home/questions}">
+                            <div class="ui massive search">
+                                <div class="ui icon fluid input">
+                                    <input autofocus class="prompt" name="search" placeholder="Search..." type="text">
+                                    <i class="search icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="ui hidden section divider"></div>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui horizontal section divider header">Top posts</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui equal width doubling stackable grid">
+                            <div class="eight wide column" th:each="instance : ${topPosts}">
+                                <div class="ui top attached orange segment">
+                                    <h3 class="ui header" th:text="${instance.key}"></h3>
+                                </div>
+                                <div class="ui bottom attached segment">
+                                    <div class="ui relaxed selection divided list">
+                                        <div class="item" th:each="question : ${instance.value}">
+                                            <i class="large middle aligned question circle disabled orange icon"></i>
+                                            <div class="content">
+                                                <a class="header" th:href="@{'/home/questions/' + ${question.id}}" th:utext="${question.subject}"></a>
+                                                <div class="description">
+                                                    Posted
+                                                    <span class="raw-date" th:text="${question.createdDate}"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

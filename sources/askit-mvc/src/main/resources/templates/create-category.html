@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create category | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--TinyMCE-->
+    <script th:src="@{/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/tinymce/prism.js}"></script>
+    <link rel="stylesheet" th:href="@{/tinymce/prism.css}" type="text/css">
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/close-message.js}"></script>
+    <script th:src="@{/js/create-category.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Create category</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/categories}"><b>Categories</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Create</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <form id="create-category-form"
+                              method="POST"
+                              th:action="@{/home/categories/create}">
+                            <div class="ui blue segment">
+                                <div class="ui grid">
+                                    <div class="row">
+                                        <div class="sixteen wide column">
+                                            <div class="ui form">
+                                                <div class="required field">
+                                                    <label>Title</label>
+                                                    <div class="ui input">
+                                                        <input id="title"
+                                                               name="title"
+                                                               placeholder="Category title"
+                                                               required
+                                                               th:value="${categoryModel.title}"
+                                                               type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="sixteen wide column">
+                                            <div class="ui right floated green disabled button"
+                                                 id="create-category"
+                                                 type="submit">
+                                                Create
+                                            </div>
+                                            <!--Approve confirmation message-->
+                                            <div class="ui basic mini modal" id="create-category-modal">
+                                                <div class="ui icon header">
+                                                    <i class="plus circle green icon"></i>
+                                                    Create category
+                                                </div>
+                                                <div class="content">
+                                                    <div class="ui center aligned container">
+                                                        Are you sure you want to continue?
+                                                    </div>
+                                                </div>
+                                                <div class="actions">
+                                                    <div class="ui center aligned container">
+                                                        <!--No-->
+                                                        <div class="ui red cancel inverted button">
+                                                            No
+                                                        </div>
+                                                        <!--Yes-->
+                                                        <button class="ui green ok inverted button"
+                                                                form="create-category-form"
+                                                                type="submit">
+                                                            Yes
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Review question | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--TinyMCE-->
+    <script th:src="@{/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/tinymce/prism.js}"></script>
+    <link rel="stylesheet" th:href="@{/tinymce/prism.css}" type="text/css">
+    <script th:src="@{/js/init-tinymce-readmode.js}"></script>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/approve-answer.js}"></script>
+    <script th:src="@{/js/init-popup.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Review question</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/reviews}"><b>Reviews</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <a class="section" th:href="@{/home/reviews/questions}"><b>Questions</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Review</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <!--Details-->
+                        <div class="ui top attached borderless menu">
+                            <!--Category-->
+                            <div class="header item">
+                                <i class="th teal icon"></i>
+                                <a target="_blank"
+                                   th:href="@{'/home/questions?category='+ ${questionCategory.title.toLowerCase()}}"
+                                   th:text="${questionCategory.title}"></a>
+                            </div>
+                            <!--User-->
+                            <div class="header item">
+                                <i class="user circle blue icon"></i>
+                                <a target="_blank"
+                                   th:href="@{'/home/profile/' + ${questionUser.id}}"
+                                   th:text="${questionUser.username}">
+                                </a>
+                            </div>
+                            <!--Relative time-->
+                            <div class="header item" th:data-content="${question.createdDate.toLocaleString()}">
+                                <i class="clock blue icon"></i>
+                                <span class="raw-date" th:text="${question.createdDate}"></span>
+                            </div>
+                        </div>
+                        <!--Content-->
+                        <div class="ui bottom attached segment">
+                            <div class="ui items">
+                                <div class="item">
+                                    <div class="content">
+                                        <div class="ui header" th:text="${question.subject}"></div>
+                                        <div class="ui divider"></div>
+                                        <!--Content-->
+                                        <div class="description">
+                                            <div class="mceReadonly" th:utext="${question.htmlText}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Buttons-->
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <!--Approve button-->
+                        <div class="ui icon green right floated button" id="approve">
+                            Approve
+                        </div>
+                        <!--Approve confirmation message-->
+                        <div class="ui basic mini modal" id="approve-modal">
+                            <div class="ui icon header">
+                                Approve question
+                            </div>
+                            <div class="content">
+                                <div class="ui container">
+                                    <div class="ui container">
+                                        <div class="ui form">
+                                            <div class="field">
+                                                <label>Comment</label>
+                                                <form id="approve-question-form"
+                                                      method="POST"
+                                                      th:action="@{'/home/reviews/questions/' + ${question.id} + '/approve'}">
+                                                <textarea name="comment"
+                                                          placeholder="Justify your decision (optional)"></textarea>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="ui right floated blue ok inverted button"
+                                        form="approve-question-form"
+                                        type="submit">
+                                    Submit
+                                </button>
+                                <div class="ui right floated red cancel inverted button">
+                                    Cancel
+                                </div>
+                            </div>
+                        </div>
+                        <!--Reject button-->
+                        <div class="ui red icon right floated button" id="reject">
+                            Reject
+                        </div>
+                        <!--Reject confirmation message-->
+                        <div class="ui basic mini modal" id="reject-modal">
+                            <div class="ui icon header">
+                                Reject question
+                            </div>
+                            <div class="content">
+                                <div class="ui container">
+                                    <div class="ui container">
+                                        <div class="ui form">
+                                            <div class="field">
+                                                <label>Comment</label>
+                                                <form id="reject-question-form"
+                                                      method="POST"
+                                                      th:action="@{'/home/reviews/questions/' + ${question.id} + '/reject'}">
+                                                <textarea name="comment"
+                                                          placeholder="Justify your decision (optional)"></textarea>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="ui right floated blue ok inverted button"
+                                        form="reject-question-form"
+                                        type="submit">
+                                    Submit
+                                </button>
+                                <div class="ui right floated red cancel inverted button">
+                                    Cancel
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Send notification | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--TinyMCE-->
+    <script th:src="@{/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/tinymce/prism.js}"></script>
+    <link rel="stylesheet" th:href="@{/tinymce/prism.css}" type="text/css">
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/init-tinymce-writemode.js}"></script>
+    <script th:src="@{/js/init-dropdown.js}"></script>
+    <script th:src="@{/js/init-checkbox.js}"></script>
+    <script th:src="@{/js/close-message.js}"></script>
+    <script th:src="@{/js/send-notification.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Send notification</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Send notification</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="sixteen wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <!--Form-->
+                <div class="row">
+                    <div class="sixteen wide column">
+                        <div class="ui blue segment">
+                            <form method="POST"
+                                  th:action="@{/home/send-notification/send}">
+                                <div class="ui doubling stackable grid">
+                                    <div class="row">
+                                        <!--Title-->
+                                        <div class="ten wide column">
+                                            <div class="ui form">
+                                                <div class="required field">
+                                                    <label>Title</label>
+                                                    <div class="ui fluid input">
+                                                        <input maxlength="64"
+                                                               name="title"
+                                                               placeholder="Give your notification a brief description"
+                                                               required
+                                                               th:value="${sendNotificationModel.title}"
+                                                               type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--Users-->
+                                        <div class="six wide column">
+                                            <div class="ui form required">
+                                                <div class="required field">
+                                                    <label>User id</label>
+                                                    <div class="ui fluid search" id="user-search">
+                                                        <div class="ui icon input">
+                                                            <input class="prompt"
+                                                                   id="user-input"
+                                                                   name="userId"
+                                                                   placeholder="Search by username or email..."
+                                                                   required
+                                                                   th:value="${sendNotificationModel.userId}"
+                                                                   type="text">
+                                                            <i class="search icon"></i>
+                                                        </div>
+                                                        <div class="results"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="inline field">
+                                                    <div class="ui toggle checkbox">
+                                                        <input class="hidden"
+                                                               id="broadcast"
+                                                               name="broadcast"
+                                                               th:value="${sendNotificationModel.broadcast}"
+                                                               type="checkbox">
+                                                        <label>All users</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Content-->
+                                    <div class="row">
+                                        <div class="sixteen wide column">
+                                            <div class="ui form">
+                                                <div class="required field">
+                                                    <label>Content</label>
+                                                    <textarea name="content"
+                                                              th:text="${sendNotificationModel.content}"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <!--Submit-->
+                                        <div class="sixteen wide column">
+                                            <button class="ui right floated blue button"
+                                                    id="submit-button"
+                                                    type="submit">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

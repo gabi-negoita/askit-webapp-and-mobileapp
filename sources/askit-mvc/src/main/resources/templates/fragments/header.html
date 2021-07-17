@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<head>
+    <th:block th:fragment="header">
+        <!-- Standard Meta -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <!--JQuery-->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+        <!--Semantic UI-->
+        <link rel="stylesheet" type="text/css" th:href="@{/semantic-ui/semantic.min.css}">
+        <script th:src="@{/semantic-ui/semantic.min.js}"></script>
+        <!--Local CSS/JS/IMAGES-->
+        <link th:href="@{/images/logo-short.svg}" rel="icon">
+        <script th:src="@{/js/main.js}"></script>
+        <!--Form loader-->
+        <script th:src="@{/js/form-loader.js}"></script>
+    </th:block>
+</head>
+</html>

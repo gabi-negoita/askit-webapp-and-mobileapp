@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--Side Bar-->
+<div class="ui vertical sidebar sidebar borderless menu" th:fragment="sidebar">
+    <!--Logo-->
+    <div class="item">
+        <a class="ui logo icon fluid image"
+           th:href="@{/home}">
+            <img th:src="@{/images/logo.svg}">
+        </a>
+    </div>
+    <!--Info-->
+    <div class="item">
+        <h4 class="ui grey header">INFO</h4>
+    </div>
+    <!--Home button-->
+    <a class="item" th:href="@{/home}">
+        <div class="middle aligned content">
+            <div class="header">
+                <i class="home green icon"></i>
+                <b>Home</b>
+            </div>
+        </div>
+    </a>
+    <!--About button-->
+    <a class="item" th:href="@{/about}">
+        <div class="middle aligned content">
+            <div class="header">
+                <i class="info circle blue icon"></i>
+                <b>About</b>
+            </div>
+        </div>
+    </a>
+    <!--Public-->
+    <div class="ui divider"></div>
+    <div class="item">
+        <h4 class="ui grey header">PUBLIC</h4>
+    </div>
+    <!--Profile-->
+    <a class="item" th:href="@{'/home/profile/' + ${session.user.id}}"
+       th:unless="${session.user} == null">
+        <div class="middle aligned content">
+            <div class="header">
+                <i class="user circle blue icon"></i>
+                <b>Profile</b>
+            </div>
+        </div>
+    </a>
+    <!--Questions-->
+    <a class="item" th:href="@{/home/questions}">
+        <div class="middle aligned content">
+            <div class="header">
+                <i class="question circle orange icon"></i>
+                <b>Questions</b>
+            </div>
+        </div>
+    </a>
+    <!--Ask questions-->
+    <a class="item" th:href="@{/home/questions/ask}"
+       th:unless="${session.user} == null">
+        <div class="middle aligned content">
+            <div class="header">
+                <i class="question circle outline orange icon"></i>
+                <b>Ask question</b>
+            </div>
+        </div>
+    </a>
+    <div class="ui divider"></div>
+    <th:block th:unless="${session.user} == null">
+        <th:block th:each="instance : ${session.user.roles}">
+            <th:block th:if="${instance.name.equals('reviewer')}">
+                <div class="item">
+                    <h4 class="ui grey header">REVIEWER</h4>
+                </div>
+                <!--Reviews-->
+                <a class="item" th:href="@{/home/reviews}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="check circle blue icon"></i>
+                            <b>Reviews</b>
+                        </div>
+                    </div>
+                </a>
+                <!--Review Questions-->
+                <a class="item" th:href="@{/home/reviews/questions}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="check circle orange icon"></i>
+                            <b>Review questions</b>
+                        </div>
+                    </div>
+                </a>
+                <!--Review Answers-->
+                <a class="item" th:href="@{/home/reviews/answers}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="check circle green icon"></i>
+                            <b>Review answers</b>
+                        </div>
+                    </div>
+                </a>
+                <div class="ui divider"></div>
+            </th:block>
+            <th:block th:if="${instance.name.equals('moderator')}">
+                <!--Moderator-->
+                <div class="item">
+                    <h4 class="ui grey header">MODERATOR</h4>
+                </div>
+                <!--Categories-->
+                <a class="item" th:href="@{/home/categories}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="th teal icon"></i>
+                            <b>Categories</b>
+                        </div>
+                    </div>
+                </a>
+                <!--Create category-->
+                <a class="item" th:href="@{/home/categories/create}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="plus circle green icon"></i>
+                            <b>Create category</b>
+                        </div>
+                    </div>
+                </a>
+                <div class="ui divider"></div>
+            </th:block>
+            <th:block th:if="${instance.name.equals('administrator')}">
+                <!--Administrator-->
+                <div class="item">
+                    <h4 class="ui grey header">ADMINISTRATOR</h4>
+                </div>
+                <!--Send notification-->
+                <a class="item" th:href="@{/home/send-notification}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="bell red icon"></i>
+                            <b>Send notification</b>
+                        </div>
+                    </div>
+                </a>
+                <!--Users-->
+                <a class="item" th:href="@{/home/users}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="user circle red icon"></i>
+                            <b>Users</b>
+                        </div>
+                    </div>
+                </a>
+                <!--Logs-->
+                <a class="item" th:href="@{/home/logs}">
+                    <div class="middle aligned content">
+                        <div class="header">
+                            <i class="file alternate red icon"></i>
+                            <b>Logs</b>
+                        </div>
+                    </div>
+                </a>
+                <div class="ui divider"></div>
+            </th:block>
+        </th:block>
+        <!--Log out-->
+        <div class="item">
+            <h4 class="ui grey header">DISCONNECT</h4>
+        </div>
+        <!--Log Out-->
+        <a class="item logout">
+            <div class="middle aligned content">
+                <div class="header">
+                    <i class="sign out orange icon"></i>
+                    <b>Log Out</b>
+                </div>
+            </div>
+        </a>
+        <!--Logout Modal-->
+        <div th:replace="fragments/logout-confirmation :: logout-confirmation"></div>
+        <div class="ui divider"></div>
+    </th:block>
+    <!--Get access-->
+    <th:block th:if="${session.user} == null">
+        <div class="item">
+            <h4 class="ui grey header">GET ACCESS</h4>
+        </div>
+        <!--Login-->
+        <a class="item" th:href="@{/login}">
+            <div class="middle aligned content">
+                <div class="header">
+                    <i class="sign in blue icon"></i>
+                    <b>Login</b>
+                </div>
+            </div>
+        </a>
+        <!--Register-->
+        <a class="item" th:href="@{/register}">
+            <div class="middle aligned content">
+                <div class="header">
+                    <i class="user plus blue icon"></i>
+                    <b>Register</b>
+                </div>
+            </div>
+        </a>
+        <div class="ui divider"></div>
+    </th:block>
+    <div class="item">
+        <div class="middle aligned content">
+            <div class="extra"
+                 th:text="'Copyright © ' + ${#dates.format(#dates.createNow(), 'yyyy')} + ' • Askit'">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

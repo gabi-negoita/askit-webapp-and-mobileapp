@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resend confirmation email | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <script th:src="@{/js/close-message.js}"></script>
+    <script th:src="@{/js/init-accordion.js}"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Resend confirmation email</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/register}"><b>Register</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Resend email</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <!--Message-->
+                <div class="row" th:unless="${messageModel == null}">
+                    <div class="eight wide column">
+                        <div th:replace="fragments/message :: message"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="eight wide column">
+                        <div class="ui blue top attached segment">
+                            <!--Tips-->
+                            <div class="ui accordion">
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    Informative tips
+                                </div>
+                                <div class="content">
+                                    <div class="ui list">
+                                        <div class="item">
+                                            <div class="ui blue label">Email</div>
+                                            <span>should be the email you used to create your account</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <!--Form-->
+                            <form method="POST" th:action="@{/register/resend-email/process-form}">
+                                <div class="ui grid">
+                                    <!--Email field-->
+                                    <div class="row">
+                                        <div class="sixteen wide column">
+                                            <div class="ui form">
+                                                <div class="required field">
+                                                    <label>Email</label>
+                                                    <div class="ui left icon input">
+                                                        <input autofocus
+                                                               class="form-control"
+                                                               name="email"
+                                                               placeholder="e.g. example@email.com"
+                                                               required
+                                                               th:value="${resetPasswordRequestModel.email}"
+                                                               type="text">
+                                                        <i class="envelope blue icon"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Submit-->
+                                    <div class="row">
+                                        <div class="column">
+                                            <button class="ui right floated blue button" name="submit" type="submit">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

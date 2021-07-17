@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Profile | Askit</title>
+    <!--Common header-->
+    <div th:replace="fragments/header :: header"></div>
+    <!--Local CSS/JS-->
+    <script th:src="@{/js/profile.js}"></script>
+    <!--Google Charts-->
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+<!--Side bar-->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="pusher">
+    <!--Top Bar-->
+    <div th:replace="fragments/topbar :: topbar"></div>
+    <!--Page Title-->
+    <div class="ui section divider"></div>
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    <span>Profile</span>
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section" th:href="@{/home}"><b>Home</b></a>
+                            <i class="right chevron icon divider"></i>
+                            <div class="active section">Profile</div>
+                        </div>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <!--Page Content-->
+    <div class="ui vertical basic very padded segment">
+        <div class="ui container">
+            <div class="ui doubling stackable grid">
+                <div class="row">
+                    <!--User banner-->
+                    <div class="eight wide top aligned column">
+                        <div class="ui top attached segment">
+                            <div class="ui grid">
+                                <div class="row">
+                                    <div class="ten wide column">
+                                        <h2 class="ui header">
+                                            <span th:text="${user.username}"></span>
+                                            <div class="sub header"
+                                                 th:text="${age} + ' years old'"
+                                                 th:unless="${age == null}">
+                                            </div>
+                                        </h2>
+                                    </div>
+                                    <div class="six wide column" th:unless="${session.user == null}">
+                                        <!--Edit-->
+                                        <a th:href="@{'/home/profile/edit/' + ${user.id}}"
+                                           th:if="${session.user.id.equals(user.id)}">
+                                            <div class="ui right floated inverted blue icon button">
+                                                <i class="edit icon"></i>
+                                            </div>
+                                        </a>
+                                        <!--Notifications-->
+                                        <a th:href="@{'/home/profile/notifications/' + ${user.id}}"
+                                           th:if="${session.user.id.equals(user.id)}">
+                                            <div class="ui right floated inverted blue icon button">
+                                                <i class="bell icon"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <th:block th:if="${user.description} == null">
+                                <div class="ui info message">
+                                    <div class="header">
+                                        No description
+                                    </div>
+                                </div>
+                            </th:block>
+                            <th:block th:unless="${user.description} == null">
+                                <h4 th:text="${user.description}"></h4>
+                            </th:block>
+                        </div>
+                    </div>
+                    <!--Statistics-->
+                    <div class="eight wide top aligned column">
+                        <div class="ui top attached segment">
+                            <div class="ui header">Statistics</div>
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <div class="ui center aligned doubling stackable equal width grid">
+                                <div class="row">
+                                    <!--Ranking points-->
+                                    <div class="column">
+                                        <div class="ui purple statistic">
+                                            <div class="value" th:text="${userStatistics.rankingPoints}"></div>
+                                            <div class="label">Ranking points</div>
+                                        </div>
+                                    </div>
+                                    <!--Questions-->
+                                    <div class="column">
+                                        <div class="ui orange statistic">
+                                            <div class="value" th:text="${userStatistics.postedQuestions}"></div>
+                                            <div class="label">Questions posted</div>
+                                        </div>
+                                    </div>
+                                    <!--Answers-->
+                                    <div class="column">
+                                        <div class="ui green statistic">
+                                            <div class="value" th:text="${userStatistics.postedAnswers}"></div>
+                                            <div class="label">Answers posted</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Activity-->
+                <div class="row">
+                    <div class="sixteen wide top aligned column">
+                        <div class="ui top attached segment">
+                            <div class="ui header">Activity</div>
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <div id="chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--Questions posted-->
+                    <div class="eight wide top aligned column">
+                        <table class="ui striped table">
+                            <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <div class="ui header" th:text="'Questions posted (' + ${questionWrapper.totalItems} + ')'"></div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <!--No questions posted message-->
+                            <th:block th:if="${questionWrapper.totalItems} == 0">
+                                <tbody>
+                                <tr>
+                                    <td class="info">
+                                        <div class="ui info message">
+                                            <div class="header">
+                                                No questions posted
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </th:block>
+                            <!--Questions posted-->
+                            <th:block th:unless="${questionWrapper.totalItems} == 0">
+                                <tbody>
+                                <th:block th:each="instance : ${questionWrapper.content}">
+                                    <tr>
+                                        <td>
+                                            <i class="linkify disabled blue icon"></i>
+                                            <a target="_blank"
+                                               th:href="@{'/home/questions/' + ${instance.id}}"
+                                               th:utext="'<b>' + ${instance.subject} + '</b>'"></a>
+                                        </td>
+                                        <td class="collapsing">
+                                        <span class="raw-date"
+                                              th:text="${instance.createdDate}"></span>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                                <tfoot class="full-width">
+                                <tr>
+                                    <th colspan="2">
+                                        <!--Pagination-->
+                                        <div class="ui nine item pagination borderless menu">
+                                            <!--First Page-->
+                                            <a th:class="'ui item page btn' + ${questionWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionPage', 1).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle left icon"></i>
+                                            </a>
+                                            <!--Previous Page-->
+                                            <a th:class="'ui item page btn' + ${questionWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionPage', questionWrapper.currentPage).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle left icon"></i>
+                                            </a>
+                                            <!--Numbered Pages-->
+                                            <th:block th:each="instance : ${questionPagination}">
+                                                <a th:class="'ui item' + ${instance == questionWrapper.currentPage  ? ' active' : ''} + ' page btn'"
+                                                   th:href="${urlBuilder.replaceQueryParam('questionPage', instance + 1).toUriString()}"
+                                                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                    <span th:text="${instance + 1}"></span>
+                                                </a>
+                                            </th:block>
+                                            <!--Next Page-->
+                                            <a th:class="'ui item page btn' + ${questionWrapper.currentPage + 1 < questionWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionPage', questionWrapper.currentPage + 2).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle right icon"></i>
+                                            </a>
+                                            <!--Last Page-->
+                                            <a th:class="'ui item page btn' + ${questionWrapper.currentPage + 1 < questionWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionPage', questionWrapper.totalPages).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle right icon"></i>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </tfoot>
+                            </th:block>
+                        </table>
+                    </div>
+                    <!--Answers posted-->
+                    <div class="eight wide top aligned column">
+                        <table class="ui striped table">
+                            <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <div class="ui header" th:text="'Answers posted (' + ${answerWrapper.totalItems} + ')'"></div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <th:block th:if="${answerPostedToQuestionMap.size()} == 0">
+                                <tbody>
+                                <tr>
+                                    <td class="info">
+                                        <div class="ui info message">
+                                            <div class="header">
+                                                No answers posted
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </th:block>
+                            <th:block th:unless="${answerPostedToQuestionMap.size()} == 0">
+                                <tbody>
+                                <th:block th:each="instance : ${answerPostedToQuestionMap}">
+                                    <tr>
+                                        <td>
+                                            <i class="linkify disabled blue icon"></i>
+                                            <a target="_blank"
+                                               th:href="@{'/home/questions/' + ${instance.key.questionId}}"
+                                               th:utext="'<b>' + ${instance.value.subject} + '</b>'"></a>
+                                        </td>
+                                        <td class="collapsing">
+                                    <span class="raw-date"
+                                          th:text="${instance.key.createdDate}"></span>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                                <tfoot class="full-width">
+                                <tr>
+                                    <th colspan="2">
+                                        <!--Pagination-->
+                                        <div class="ui nine item pagination borderless menu">
+                                            <!--First Page-->
+                                            <a th:class="'ui item page btn' + ${answerWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerPage', 1).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle left icon"></i>
+                                            </a>
+                                            <!--Previous Page-->
+                                            <a th:class="'ui item page btn' + ${answerWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerPage', answerWrapper.currentPage).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle left icon"></i>
+                                            </a>
+                                            <!--Numbered Pages-->
+                                            <th:block th:each="instance : ${answerPagination}">
+                                                <a th:class="'ui item' + ${instance == answerWrapper.currentPage  ? ' active' : ''} + ' page btn'"
+                                                   th:href="${urlBuilder.replaceQueryParam('answerPage', instance + 1).toUriString()}"
+                                                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                    <span th:text="${instance + 1}"></span>
+                                                </a>
+                                            </th:block>
+                                            <!--Next Page-->
+                                            <a th:class="'ui item page btn' + ${answerWrapper.currentPage + 1 < answerWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerPage', answerWrapper.currentPage + 2).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle right icon"></i>
+                                            </a>
+                                            <!--Last Page-->
+                                            <a th:class="'ui item page btn' + ${answerWrapper.currentPage + 1 < answerWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerPage', answerWrapper.totalPages).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle right icon"></i>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </tfoot>
+                            </th:block>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" th:unless="${session.user} == null">
+                    <!--Questions voted-->
+                    <div class="eight wide column"
+                         th:if="${session.user.id.equals(user.id)}">
+                        <table class="ui striped table">
+                            <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <div class="ui header" th:text="'Questions voted (' + ${questionVoteWrapper.totalItems} + ')'"></div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <th:block th:if="${questionVoteWrapper.totalItems} == 0">
+                                <tbody>
+                                <tr>
+                                    <td class="info">
+                                        <div class="ui info message">
+                                            <div class="header">
+                                                No voted questions
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </th:block>
+                            <th:block th:unless="${questionVoteWrapper.totalItems} == 0">
+                                <tbody>
+                                <th:block th:each="instance : ${questionVoteWrapper.content}">
+                                    <tr>
+                                        <td class="collapsing">
+                                            <!--Up voted-->
+                                            <div class="ui green icon label"
+                                                 th:if="${instance.vote} == 1">
+                                                <i class="thumbs up icon"></i>
+                                            </div>
+                                            <!--Down voted-->
+                                            <div class="ui orange icon label"
+                                                 th:if="${instance.vote} == -1">
+                                                <i class="horizontally flipped thumbs down icon"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <i class="linkify disabled blue icon"></i>
+                                            <a target="_blank"
+                                               th:href="@{'/home/questions/' + ${instance.questionId}}"
+                                               th:utext="'<b>' + ${questionMap.get(instance.questionId)} + '</b>'"></a>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                                <tfoot class="full-width">
+                                <tr>
+                                    <th colspan="2">
+                                        <!--Pagination-->
+                                        <div class="ui nine item pagination borderless menu">
+                                            <!--First Page-->
+                                            <a th:class="'ui item page btn' + ${questionVoteWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionVotePage', 1).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle left icon"></i>
+                                            </a>
+                                            <!--Previous Page-->
+                                            <a th:class="'ui item page btn' + ${questionVoteWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionVotePage', questionVoteWrapper.currentPage).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle left icon"></i>
+                                            </a>
+                                            <!--Numbered Pages-->
+                                            <th:block th:each="instance : ${questionVotePagination}">
+                                                <a th:class="'ui item' + ${instance == questionVoteWrapper.currentPage  ? ' active' : ''} + ' page btn'"
+                                                   th:href="${urlBuilder.replaceQueryParam('questionVotePage', instance + 1).toUriString()}"
+                                                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                    <span th:text="${instance + 1}"></span>
+                                                </a>
+                                            </th:block>
+                                            <!--Next Page-->
+                                            <a th:class="'ui item page btn' + ${questionVoteWrapper.currentPage + 1 < questionVoteWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionVotePage', questionVoteWrapper.currentPage + 2).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle right icon"></i>
+                                            </a>
+                                            <!--Last Page-->
+                                            <a th:class="'ui item page btn' + ${questionVoteWrapper.currentPage + 1 < questionVoteWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('questionVotePage', questionVoteWrapper.totalPages).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle right icon"></i>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </tfoot>
+                            </th:block>
+                        </table>
+                    </div>
+                    <!--Answers voted-->
+                    <div class="eight wide column"
+                         th:if="${session.user.id.equals(user.id)}">
+                        <table class="ui striped table">
+                            <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <div class="ui header" th:text="'Answers voted (' + ${answerVoteWrapper.totalItems} + ')'"></div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <th:block th:if="${answerVoteWrapper.totalItems} == 0">
+                                <tbody>
+                                <tr>
+                                    <td class="info">
+                                        <div class="ui info message">
+                                            <div class="header">
+                                                No voted answers
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </th:block>
+                            <th:block th:unless="${answerVoteWrapper.totalItems} == 0">
+                                <tbody>
+                                <th:block th:each="instance : ${answerVoteWrapper.content}">
+                                    <tr>
+                                        <td class="collapsing">
+                                            <!--Up voted-->
+                                            <div class="ui green icon label"
+                                                 th:if="${instance.vote} == 1">
+                                                <i class="thumbs up icon"></i>
+                                            </div>
+                                            <!--Down voted-->
+                                            <div class="ui orange icon label"
+                                                 th:if="${instance.vote} == -1">
+                                                <i class="horizontally flipped thumbs down icon"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <i class="linkify disabled blue icon"></i>
+                                            <a target="_blank"
+                                               th:href="@{'/home/questions/' + ${answerQuestionMap.get(instance.answerId)}}"
+                                               th:utext="'<b>' + ${questionMap.get(answerQuestionMap.get(instance.answerId))} + '</b>'"></a>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                                <tfoot class="full-width">
+                                <tr>
+                                    <th colspan="2">
+                                        <!--Pagination-->
+                                        <div class="ui nine item pagination borderless menu">
+                                            <!--First Page-->
+                                            <a th:class="'ui item page btn' + ${answerVoteWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerVotePage', 1).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle left icon"></i>
+                                            </a>
+                                            <!--Previous Page-->
+                                            <a th:class="'ui item page btn' + ${answerVoteWrapper.currentPage != 0 ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerVotePage', answerVoteWrapper.currentPage).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle left icon"></i>
+                                            </a>
+                                            <!--Numbered Pages-->
+                                            <th:block th:each="instance : ${answerVotePagination}">
+                                                <a th:class="'ui item' + ${instance == answerVoteWrapper.currentPage  ? ' active' : ''} + ' page btn'"
+                                                   th:href="${urlBuilder.replaceQueryParam('answerVotePage', instance + 1).toUriString()}"
+                                                   th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                    <span th:text="${instance + 1}"></span>
+                                                </a>
+                                            </th:block>
+                                            <!--Next Page-->
+                                            <a th:class="'ui item page btn' + ${answerVoteWrapper.currentPage + 1 < answerVoteWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerVotePage', answerVoteWrapper.currentPage + 2).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="angle right icon"></i>
+                                            </a>
+                                            <!--Last Page-->
+                                            <a th:class="'ui item page btn' + ${answerVoteWrapper.currentPage + 1 < answerVoteWrapper.totalPages ? '' : ' disabled'}"
+                                               th:href="${urlBuilder.replaceQueryParam('answerVotePage', answerVoteWrapper.totalPages).toUriString()}"
+                                               th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                                                <i class="double angle right icon"></i>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </tfoot>
+                            </th:block>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
